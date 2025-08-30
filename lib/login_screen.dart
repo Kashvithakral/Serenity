@@ -39,15 +39,13 @@ class _LoginScreenState extends State<LoginScreen> {
     dynamic result = await _authService.signIn(email, password);
 
     if (result == null) {
-      // Navigate to signup screen if login fails
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => const SignupScreen()),
+      // Show error message if login fails
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Login failed. Please check your credentials.')),
       );
     } else {
-      // Navigate to home screen or show success message
+      // The AuthWrapper in main.dart will handle navigation to AISelectionScreen
       print('Signed in: ${result.uid}');
-      // The AuthWrapper in main.dart will handle navigation to HomeScreen
     }
   }
 

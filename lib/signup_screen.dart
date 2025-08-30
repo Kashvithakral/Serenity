@@ -50,11 +50,7 @@ class _SignupScreenState extends State<SignupScreen> {
     } else {
       // Navigate to home screen or show success message
       print('Signed up: ${result.uid}');
-      // TODO: Navigate to home screen
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => const AISelectionScreen()),
-      );
+      // The AuthWrapper will handle navigation.
     }
   }
 

@@ -55,7 +55,7 @@ class _AIChatScreenState extends State<AIChatScreen> {
       while (retries < 3) {
         try {
           final response = await http.post(
-            Uri.parse('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-pro:generateContent?key=$_apiKey'),
+            Uri.parse('https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=$_apiKey'),
             headers: {
               'Content-Type': 'application/json',
             },
@@ -112,7 +112,9 @@ class _AIChatScreenState extends State<AIChatScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text('${widget.selectedBot} Chat'),
-        backgroundColor: AppTheme.secondary,
+        backgroundColor: widget.selectedBot == 'Ira'
+            ? Theme.of(context).colorScheme.secondary
+            : Theme.of(context).colorScheme.primary,
         actions: [
           IconButton(
             icon: const Icon(Icons.logout),
@@ -140,12 +142,21 @@ class _AIChatScreenState extends State<AIChatScreen> {
                     child: Container(
                       padding: const EdgeInsets.all(12.0),
                       decoration: BoxDecoration(
-                        color: isUserMessage ? Theme.of(context).primaryColor.withOpacity(0.2) : Colors.white.withOpacity(0.8),
+                        color: isUserMessage
+                            ? Theme.of(context).primaryColor.withOpacity(0.2)
+                            : Theme.of(context).brightness == Brightness.dark
+                                ? Colors.cyan.withOpacity(0.8)
+                                : Colors.white.withOpacity(0.8),
                         borderRadius: BorderRadius.circular(16),
                       ),
                       child: Text(
                         message.replaceFirst(isUserMessage ? 'You: ' : '${widget.selectedBot}: ', ''), // Remove prefix for display
-                        style: GoogleFonts.openSans(fontSize: 16),
+                        style: GoogleFonts.openSans(
+                          fontSize: 16,
+                          color: Theme.of(context).brightness == Brightness.dark
+                              ? Colors.white
+                              : Colors.black,
+                        ),
                       ),
                     ),
                   ),
@@ -163,7 +174,7 @@ class _AIChatScreenState extends State<AIChatScreen> {
                     decoration: InputDecoration(
                       hintText: 'Type your message...',
                       filled: true,
-                      fillColor: Colors.white.withOpacity(0.8),
+                      fillColor: Theme.of(context).canvasColor.withOpacity(0.8),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(16),
                         borderSide: BorderSide.none,

@@ -2,9 +2,61 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'ai_chat_screen.dart';
 import 'theme.dart';
+import 'auth_service.dart';
 
-class AISelectionScreen extends StatelessWidget {
+final ValueNotifier<ThemeMode> themeNotifier =
+    ValueNotifier(ThemeMode.system);
+
+class AISelectionScreen extends StatefulWidget {
   const AISelectionScreen({super.key});
+
+  @override
+  State<AISelectionScreen> createState() => _AISelectionScreenState();
+}
+
+class _AISelectionScreenState extends State<AISelectionScreen> {
+  void _showThemeDialog() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Select Theme'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ListTile(
+              title: const Text('System'),
+              onTap: () {
+                themeNotifier.value = ThemeMode.system;
+                Navigator.pop(context);
+              },
+            ),
+            ListTile(
+              title: const Text('Light'),
+              onTap: () {
+                themeNotifier.value = ThemeMode.light;
+                Navigator.pop(context);
+              },
+            ),
+            ListTile(
+              title: const Text('Dark'),
+              onTap: () {
+                themeNotifier.value = ThemeMode.dark;
+                Navigator.pop(context);
+              },
+            ),
+            ListTile(
+              title: const Text('Logout'),
+              onTap: () async {
+                final AuthService _authService = AuthService();
+                await _authService.signOut();
+                Navigator.pop(context);
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -16,19 +68,15 @@ class AISelectionScreen extends StatelessWidget {
             fontWeight: FontWeight.bold,
           ),
         ),
-        backgroundColor: AppTheme.primary,
+        backgroundColor: Theme.of(context).primaryColor,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.settings),
+            onPressed: _showThemeDialog,
+          ),
+        ],
       ),
       body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              AppTheme.primary,
-              AppTheme.secondary,
-            ],
-          ),
-        ),
         child: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -91,7 +139,6 @@ class AISelectionScreen extends StatelessWidget {
                 textAlign: TextAlign.center,
                 style: GoogleFonts.openSans(
                   fontSize: 16,
-                  color: Colors.black54,
                 ),
               ),
             ],
