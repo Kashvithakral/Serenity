@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "240050525476",
+    "project_id": "serenity-4598f",
+    "storage_bucket": "serenity-4598f.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:240050525476:android:4538b8bb4136778b86cfb1",
+        "android_client_info": {
+          "package_name": "com.example.myapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBxiRbAAh_8aC6K_olooS5O1ESowxoJs18"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
