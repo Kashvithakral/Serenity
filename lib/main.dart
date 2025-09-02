@@ -1,18 +1,22 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_core/firebase_core.dart'; // Import Firebase Core
-import 'package:firebase_auth/firebase_auth.dart'; // Import Firebase Auth
-import 'firebase_options.dart'; // Import Firebase options
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'firebase_options.dart';
 import 'login_screen.dart';
 import 'signup_screen.dart';
-import 'auth_service.dart'; // Import AuthService
-import 'ai_chat_screen.dart'; // Import the AIChatScreen
+import 'auth_service.dart';
+import 'ai_chat_screen.dart';
 import 'mood_tracker_screen.dart';
-import 'ai_selection_screen.dart';
-import 'package:google_fonts/google_fonts.dart'; // Import Google Fonts
+import 'ai_selection_screen.dart' hide themeNotifier;
+import 'ai_bots_screen.dart';
+import 'wellness_zone_screen.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'theme.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await dotenv.load(fileName: ".env");
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
@@ -20,7 +24,7 @@ void main() async {
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  const MyApp({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -38,8 +42,7 @@ class MyApp extends StatelessWidget {
             primarySwatch: Colors.blue,
           ),
           themeMode: currentMode,
-          home:
-              const AuthWrapper(), // Use AuthWrapper to handle authentication state
+          home: const AuthWrapper(),
         );
       },
     );
@@ -47,7 +50,7 @@ class MyApp extends StatelessWidget {
 }
 
 class AuthWrapper extends StatefulWidget {
-  const AuthWrapper({super.key});
+  const AuthWrapper({Key? key}) : super(key: key);
 
   @override
   State<AuthWrapper> createState() => _AuthWrapperState();
@@ -67,7 +70,6 @@ class _AuthWrapperState extends State<AuthWrapper> {
         setState(() {
           _user = user;
           if (user == null) {
-            // User logged out, reset the flag
             _moodTrackerCompleted = false;
           }
           _isLoading = false;
@@ -83,7 +85,6 @@ class _AuthWrapperState extends State<AuthWrapper> {
     }
 
     if (_user != null) {
-      // User is logged in
       if (!_moodTrackerCompleted) {
         return MoodTrackerScreen(
           onMoodDetermined: () {
@@ -95,14 +96,56 @@ class _AuthWrapperState extends State<AuthWrapper> {
           },
         );
       } else {
-        return const AISelectionScreen();
+        return const MainScreen();
       }
     } else {
-      // User is logged out
       return const LoginScreen();
     }
   }
 }
 
-// Removed the old HomeScreen placeholder as it's replaced by BotSelectionScreen
-// class HomeScreen extends StatelessWidget { ... }
+class MainScreen extends StatefulWidget {
+  const MainScreen({Key? key}) : super(key: key);
+
+  @override
+  State<MainScreen> createState() => _MainScreenState();
+}
+
+class _MainScreenState extends State<MainScreen> {
+  int _selectedIndex = 0;
+
+  static List<Widget> _widgetOptions = [
+    AiBotsScreen(),
+    WellnessZoneScreen(),
+  ];
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Center(
+        child: _widgetOptions.elementAt(_selectedIndex),
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(Icons.android),
+            label: 'AI Bots',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.favorite),
+            label: 'Wellness Zone',
+          ),
+        ],
+        currentIndex: _selectedIndex,
+        selectedItemColor: Colors.amber[800],
+        onTap: _onItemTapped,
+      ),
+    );
+  }
+}

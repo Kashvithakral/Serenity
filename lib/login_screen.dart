@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'signup_screen.dart';
 import 'theme.dart';
@@ -53,16 +54,17 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              AppTheme.primary,
-              AppTheme.secondary,
-            ],
-          ),
-        ),
+decoration: const BoxDecoration(
+  gradient: LinearGradient(
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+    colors: [
+      Color(0xFFE1F5FE),
+      Color(0xFF81D4FA),
+      Color(0xFF29B6F6),
+    ],
+  ),
+),
         child: Center(
           child: SingleChildScrollView(
             padding: const EdgeInsets.all(32.0),
@@ -70,14 +72,39 @@ class _LoginScreenState extends State<LoginScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  'Welcome Back',
+                  'Welcome!',
                   style: GoogleFonts.nunito(
                     fontSize: 32,
                     fontWeight: FontWeight.bold,
                     color: Colors.black87,
                   ),
                 ),
+                const SizedBox(height: 16),
+                Text(
+                  'Please login or sign up to access our app.',
+                  style: GoogleFonts.openSans(
+                    fontSize: 16,
+                    color: Colors.black54,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
                 const SizedBox(height: 48),
+                Text(
+                  'Enter via Social Networks',
+                  style: GoogleFonts.openSans(
+                    color: Colors.black54,
+                  ),
+                ),
+                const SizedBox(height: 16),
+                _buildSocialLogin(),
+                const SizedBox(height: 16),
+                Text(
+                  'or login with email',
+                  style: GoogleFonts.openSans(
+                    color: Colors.black54,
+                  ),
+                ),
+                const SizedBox(height: 16),
                 _buildTextField(
                   controller: _emailController,
                   hintText: 'Email',
@@ -93,16 +120,55 @@ class _LoginScreenState extends State<LoginScreen> {
                 const SizedBox(height: 32),
                 _buildLoginButton(),
                 const SizedBox(height: 16),
-                Text(
-                  'Forgot Password?',
-                  style: GoogleFonts.openSans(
-                    color: Colors.black54,
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    IconButton(
+                      icon: const Icon(FontAwesomeIcons.google),
+                      onPressed: () {
+                        // TODO: Implement Google sign-in
+                      },
+                    ),
+                    IconButton(
+                      icon: const Icon(FontAwesomeIcons.facebook),
+                      onPressed: () {
+                        // TODO: Implement Facebook sign-in
+                      },
+                    ),
+                    IconButton(
+                      icon: const Icon(FontAwesomeIcons.apple),
+                      onPressed: () {
+                        // TODO: Implement Apple sign-in
+                      },
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 16),
+                GestureDetector(
+                  onTap: () {
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(builder: (context) => const SignupScreen()),
+                    );
+                  },
+                  child: Text.rich(
+                    TextSpan(
+                      text: "Don't have an account? ",
+                      style: GoogleFonts.openSans(
+                        color: Colors.black54,
+                      ),
+                      children: [
+                        TextSpan(
+                          text: 'Sign up',
+                          style: GoogleFonts.openSans(
+                            color: AppTheme.accent,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-                const SizedBox(height: 48),
-                _buildSocialLogin(),
-                const SizedBox(height: 32),
-                _buildSignupLink(context),
               ],
             ),
           ),
@@ -153,7 +219,7 @@ class _LoginScreenState extends State<LoginScreen> {
         shadowColor: AppTheme.accent.withOpacity(0.5),
       ),
       child: Text(
-        'Sign In',
+        'Sign Up',
         style: GoogleFonts.openSans(
           fontSize: 18,
           fontWeight: FontWeight.bold,
@@ -167,10 +233,11 @@ class _LoginScreenState extends State<LoginScreen> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        // Removed Google sign-in button
-        // _buildSocialButton(FontAwesomeIcons.google),
-        const SizedBox(width: 16),
-        _buildSocialButton(Icons.apple), // Changed to Icons.apple for simplicity
+        _buildSocialButton(FontAwesomeIcons.google),
+        const SizedBox(width: 8),
+        _buildSocialButton(FontAwesomeIcons.facebook),
+        const SizedBox(width: 8),
+        _buildSocialButton(FontAwesomeIcons.apple),
       ],
     );
   }
@@ -184,36 +251,15 @@ class _LoginScreenState extends State<LoginScreen> {
         // }
         // TODO: Implement Apple sign-in
       },
-      icon: Icon(icon), // Changed to Icon for simplicity
+      icon: Icon(icon),
       iconSize: 32,
       color: Colors.black54,
-    );
-  }
-
-  Widget _buildSignupLink(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        // Navigate to signup screen
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => const SignupScreen()),
-        );
-      },
-      child: Text.rich(
-        TextSpan(
-          text: "Don't have an account? ",
-          style: GoogleFonts.openSans(
-            color: Colors.black54,
-          ),
-          children: [
-            TextSpan(
-              text: 'Sign Up',
-              style: GoogleFonts.openSans(
-                color: AppTheme.accent,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ],
+      style: ButtonStyle(
+        backgroundColor: MaterialStateProperty.all(Colors.white),
+        elevation: MaterialStateProperty.all(4),
+        padding: MaterialStateProperty.all(const EdgeInsets.all(16)),
+        shape: MaterialStateProperty.all(
+          const CircleBorder(),
         ),
       ),
     );

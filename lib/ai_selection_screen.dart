@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'ai_chat_screen.dart';
 import 'theme.dart';
 import 'auth_service.dart';
+import 'wellness_zone_screen.dart'; // Import the WellnessZoneScreen
 
 final ValueNotifier<ThemeMode> themeNotifier =
     ValueNotifier(ThemeMode.system);
@@ -94,6 +96,23 @@ class _AISelectionScreenState extends State<AISelectionScreen> {
                 'Your Logical Thinker',
                 'assets/rahi_avatar.png', // Replace with actual asset path
               ),
+              const SizedBox(height: 32),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const WellnessZoneScreen(),
+                    ),
+                  );
+                },
+                child: Text(
+                  'Go to Wellness Zone',
+                  style: GoogleFonts.nunito(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
             ],
           ),
         ),
@@ -103,14 +122,17 @@ class _AISelectionScreenState extends State<AISelectionScreen> {
 
   Widget _buildBotCard(BuildContext context, String botName, String description, String imagePath) {
     return GestureDetector(
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => AIChatScreen(selectedBot: botName),
-          ),
-        );
-      },
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => AIChatScreen(
+                  botName: botName,
+                  botPersonality: botName == 'Ira' ? 'emotional' : 'logical',
+                ),
+              ),
+            );
+          },
       child: Card(
         elevation: 8,
         shape: RoundedRectangleBorder(
@@ -123,7 +145,7 @@ class _AISelectionScreenState extends State<AISelectionScreen> {
             children: [
               CircleAvatar(
                 radius: 50,
-                backgroundImage: AssetImage(imagePath),
+                child: Image.asset(imagePath, width: 100, height: 100),
               ),
               const SizedBox(height: 16),
               Text(

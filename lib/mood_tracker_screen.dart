@@ -147,7 +147,10 @@ class _MoodTrackerScreenState extends State<MoodTrackerScreen> {
               Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => AIChatScreen(selectedBot: suggestedBot),
+                  builder: (context) => AIChatScreen(
+                    botName: suggestedBot,
+                    botPersonality: suggestedBot == 'Ira' ? 'emotional' : 'logical',
+                  ),
                 ),
               );
             },
@@ -187,22 +190,22 @@ class _MoodTrackerScreenState extends State<MoodTrackerScreen> {
             child: SingleChildScrollView(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  _questions[index]['question'] as String,
-                  style: const TextStyle(fontSize: 24),
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: 20),
-                ...(_questions[index]['answers'] as List<String>).map((answer) {
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 8.0),
-                    child: ElevatedButton(
-                      onPressed: () => _handleAnswer(answer),
-                      child: Text(answer),
-                    ),
-                  );
-                }),
+                children: [
+                  Text(
+                    _questions[index]['question'] as String,
+                    style: const TextStyle(fontSize: 24),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 20),
+                  ...(_questions[index]['answers'] as List<String>).map((answer) {
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 8.0),
+                      child: ElevatedButton(
+                        onPressed: () => _handleAnswer(answer),
+                        child: Text(answer),
+                      ),
+                    );
+                  }),
                 ],
               ),
             ),
