@@ -1,232 +1,179 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
-import 'package:flutter_tts/flutter_tts.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:url_launcher/url_launcher.dart' as url_launcher;
+import 'dart:math';
 
 class WellnessZoneScreen extends StatefulWidget {
-  const WellnessZoneScreen({Key? key}) : super(key: key);
-
   @override
-  State<WellnessZoneScreen> createState() => _WellnessZoneScreenState();
+  _WellnessZoneScreenState createState() => _WellnessZoneScreenState();
 }
 
-class _WellnessZoneScreenState extends State<WellnessZoneScreen> {
-  String? _quote;
-  String? _poem;
-  String? _story;
-  bool _isLoading = true;
-  String? _errorMessage;
-
-  final FlutterTts flutterTts = FlutterTts();
+class _WellnessZoneScreenState extends State<WellnessZoneScreen>  with SingleTickerProviderStateMixin {
+  String quote = generateDailyQuote();
+  late AnimationController _animationController;
+  late Animation<Color?> _colorAnimation;
 
   @override
   void initState() {
     super.initState();
-    _loadData();
-  }
+    _animationController = AnimationController(
+      duration: const Duration(seconds: 5),
+      vsync: this,
+    )..repeat(reverse: true);
 
-  Future<void> _loadData() async {
-    setState(() {
-      _isLoading = true;
-      _errorMessage = null;
-    });
-    final prefs = await SharedPreferences.getInstance();
-    _quote = prefs.getString('quote');
-    _poem = prefs.getString('poem');
-    _story = prefs.getString('story');
-
-    if (_quote == null || _poem == null || _story == null) {
-      await _fetchData();
-    } else {
-      setState(() {
-        _isLoading = false;
-      });
-    }
-  }
-
-  Future<void> _fetchData() async {
-    _quote = await _fetchGeminiContent('3 line motivational quote');
-    _poem = await _fetchGeminiContent('5 to 8 line motivational poem');
-    _story = await _fetchGeminiContent('10 to 12 line motivational story');
-    if (mounted) {
-      setState(() {
-        _isLoading = false;
-      });
-      _saveData();
-    }
-  }
-
-  Future<void> _saveData() async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString('quote', _quote ?? '');
-    await prefs.setString('poem', _poem ?? '');
-    await prefs.setString('story', _story ?? '');
-  }
-
-  Future<String?> _fetchGeminiContent(String prompt) async {
-    await dotenv.load();
-    final apiKey = dotenv.env['GEMINI_API_KEY'];
-    if (apiKey == null) {
-      setState(() {
-        _errorMessage = 'GEMINI_API_KEY not found in .env file';
-        _isLoading = false;
-      });
-      return null;
-    }
-    final url = Uri.parse('https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=$apiKey');
-    final headers = {'Content-Type': 'application/json'};
-    final body = jsonEncode({
-      'contents': [
-        {
-          'parts': [
-            {'text': 'Respond to the following prompt: $prompt'}
-          ]
-        }
-      ]
-    });
-
-    try {
-      final response = await http.post(url, headers: headers, body: body);
-
-      if (response.statusCode == 200) {
-        final jsonResponse = jsonDecode(response.body);
-        final content = jsonResponse['candidates'][0]['content']['parts'][0]['text'];
-        return content;
-      } else {
-        setState(() {
-          _errorMessage = 'Failed to load content. Please try again later.';
-          _isLoading = false;
-        });
-        return null;
-      }
-    } catch (e) {
-      setState(() {
-        _errorMessage = 'An error occurred. Please check your internet connection and try again.';
-        _isLoading = false;
-      });
-      return null;
-    }
+    _colorAnimation = ColorTween(begin: Colors.purple.withOpacity(0.4), end: Colors.blue.withOpacity(0.4))
+        .animate(_animationController);
   }
 
   @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
+  }
+
+
+  @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      padding: const EdgeInsets.all(16.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          if (_errorMessage != null)
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Wellness Zone'),
+      ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
             Padding(
-              padding: const EdgeInsets.only(bottom: 16.0),
-              child: Text(
-                _errorMessage!,
-                style: TextStyle(color: Colors.red),
-              ),
-            ),
-          Card(
-            elevation: 4,
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+              padding: const EdgeInsets.all(20.0),
+              child: Stack(
+                alignment: Alignment.center,
                 children: [
-                  Text(
-                    'Motivational Quote',
-                    style: GoogleFonts.nunito(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
+                  AnimatedBuilder(
+                    animation: _animationController,
+                    builder: (context, child) {
+                      return Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(16),
+                          gradient: RadialGradient(
+                            colors: [
+                              _colorAnimation.value!,
+                              Colors.blue.withOpacity(0.4),
+                              Colors.green.withOpacity(0.4),
+                              Colors.transparent,
+                            ],
+                            stops: const [0.0, 0.3, 0.6, 1.0],
+                            center: Alignment.center,
+                          ),
+                        ),
+                        width: 320,
+                        height: 170,
+                      );
+                    },
                   ),
-                  const SizedBox(height: 8),
-                  Text(
-                    _quote ?? 'Loading...',
-                    style: GoogleFonts.openSans(fontSize: 16),
-                  ),
-                  const SizedBox(height: 8),
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: IconButton(
-                      icon: const Icon(Icons.volume_up),
-                      onPressed: () => _speak(_quote ?? ''),
+                  Material(
+                    elevation: 8,
+                    shadowColor: Theme.of(context).brightness == Brightness.dark
+                        ? Colors.grey.shade600
+                        : null,
+                    borderRadius: BorderRadius.circular(16),
+                    child: Card(
+                      color: Color(0xFFB2EBF2), // Light faded cyan
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      child: Container(
+                        width: 300,
+                        padding: const EdgeInsets.all(24.0),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(8),
+                                gradient: LinearGradient(
+                                  colors: [
+                                    Colors.orange.shade400,
+                                    Colors.orange.shade700,
+                                  ],
+                                  begin: Alignment.topLeft,
+                                  end: Alignment.bottomRight,
+                                ),
+                              ),
+                              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                              child: Text(
+                                "Quote of the day",
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black,
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                            SizedBox(height: 8),
+                            Text(
+                              quote,
+                              style: TextStyle(
+                                fontSize: 20,
+                                color: Theme.of(context).brightness == Brightness.dark
+                                    ? Colors.black
+                                    : Colors.black,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                          ],
+                        ),
+                      ),
                     ),
                   ),
                 ],
               ),
             ),
-          ),
-          const SizedBox(height: 16),
-          Card(
-            elevation: 4,
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Motivational Poem',
-                    style: GoogleFonts.nunito(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    _poem ?? 'Loading...',
-                    style: GoogleFonts.openSans(fontSize: 16),
-                  ),
-                  const SizedBox(height: 8),
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: IconButton(
-                      icon: const Icon(Icons.volume_up),
-                      onPressed: () => _speak(_poem ?? ''),
-                    ),
-                  ),
-                ],
-              ),
+            SizedBox(height: 20),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: <Widget>[
+                ElevatedButton(
+                  onPressed: () {
+                    _launchURL(
+                        'https://open.spotify.com/playlist/4GxWjsANqWadCBmdnV08jy?si=rcYvuQnlTV-gelRD7j-nnw&pi=yWzr3GwhStKDT');
+                  },
+                  child: Text('Stories'),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    _launchURL(
+                        'https://open.spotify.com/playlist/5DFZUVOZY2eNDhm65tvHdD?si=JPD3lFGATQapZuCvgBDlvg&pi=i1QiEbjtTr2cU');
+                  },
+                  child: Text('Songs'),
+                ),
+              ],
             ),
-          ),
-          const SizedBox(height: 16),
-          Card(
-            elevation: 4,
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Motivational Story',
-                    style: GoogleFonts.nunito(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    _story ?? 'Loading...',
-                    style: GoogleFonts.openSans(fontSize: 16),
-                  ),
-                  const SizedBox(height: 8),
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: IconButton(
-                      icon: const Icon(Icons.volume_up),
-                      onPressed: () => _speak(_story ?? ''),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
 
-  Future<void> _speak(String text) async {
-    await flutterTts.speak(text);
+ _launchURL(String url) async {
+    final uri = Uri.parse(url);
+    try {
+      await url_launcher.launchUrl(uri, mode: url_launcher.LaunchMode.externalApplication);
+    } catch (e) {
+      print('Could not launch $url: $e');
+    }
   }
+}
+
+String generateDailyQuote() {
+  List<String> quotes = [
+    "The sun sets gently, the world finds rest, in calm we breathe...",
+    "In the midst of winter, I found there was, within me, an invincible summer.",
+    "The best and most beautiful things in the world cannot be seen or even touched - they must be felt with the heart.",
+    "Do not go where the path may lead, go instead where there is no path and leave a trail.",
+    "Darkness cannot drive out darkness: only light can do that. Hate cannot drive out hate: only love can do that."
+  ];
+
+  // Use the current day as the seed for the random number generator
+  Random random = Random(DateTime.now().day);
+  int index = random.nextInt(quotes.length);
+  return quotes[index];
 }

@@ -16,15 +16,37 @@ class AISelectionScreen extends StatefulWidget {
   State<AISelectionScreen> createState() => _AISelectionScreenState();
 }
 
-class _AISelectionScreenState extends State<AISelectionScreen> {
-  void _showThemeDialog() {
+class _AISelectionScreenState extends State<AISelectionScreen> with SingleTickerProviderStateMixin {
+  late AnimationController _animationController;
+  late Animation<Color?> _colorAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _animationController = AnimationController(
+      duration: const Duration(seconds: 5),
+      vsync: this,
+    )..repeat(reverse: true);
+
+    _colorAnimation = ColorTween(begin: Colors.purple.withOpacity(0.4), end: Colors.blue.withOpacity(0.4))
+        .animate(_animationController);
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
+  }
+
+  void _showSettingsDialog(BuildContext context) {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Select Theme'),
+        title: const Text('Settings'),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
+            const Text('Theme', style: TextStyle(fontWeight: FontWeight.bold)),
             ListTile(
               title: const Text('System'),
               onTap: () {
@@ -46,6 +68,8 @@ class _AISelectionScreenState extends State<AISelectionScreen> {
                 Navigator.pop(context);
               },
             ),
+            const SizedBox(height: 16),
+            const Text('Account', style: TextStyle(fontWeight: FontWeight.bold)),
             ListTile(
               title: const Text('Logout'),
               onTap: () async {
@@ -59,6 +83,7 @@ class _AISelectionScreenState extends State<AISelectionScreen> {
       ),
     );
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -74,7 +99,7 @@ class _AISelectionScreenState extends State<AISelectionScreen> {
         actions: [
           IconButton(
             icon: const Icon(Icons.settings),
-            onPressed: _showThemeDialog,
+            onPressed: () => _showSettingsDialog(context),
           ),
         ],
       ),
@@ -102,7 +127,7 @@ class _AISelectionScreenState extends State<AISelectionScreen> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => const WellnessZoneScreen(),
+                      builder: (context) => WellnessZoneScreen(),
                     ),
                   );
                 },
@@ -133,39 +158,67 @@ class _AISelectionScreenState extends State<AISelectionScreen> {
               ),
             );
           },
-      child: Card(
-        elevation: 8,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16),
-        ),
-        child: Container(
-          width: 250,
-          padding: const EdgeInsets.all(24.0),
-          child: Column(
-            children: [
-              CircleAvatar(
-                radius: 50,
-                child: Image.asset(imagePath, width: 100, height: 100),
-              ),
-              const SizedBox(height: 16),
-              Text(
-                botName,
-                style: GoogleFonts.nunito(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
+      child: Stack(
+        children: [
+          // Glowing Light Effect
+          AnimatedBuilder(
+            animation: _animationController,
+            builder: (context, child) {
+              return Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(16),
+                  gradient: RadialGradient(
+                    colors: [
+                      _colorAnimation.value!,
+                      Colors.blue.withOpacity(0.4),
+                      Colors.green.withOpacity(0.4),
+                      Colors.transparent,
+                    ],
+                    stops: const [0.0, 0.2, 0.4, 1.0],
+                    center: Alignment.center,
+                  ),
                 ),
-              ),
-              const SizedBox(height: 8),
-              Text(
-                description,
-                textAlign: TextAlign.center,
-                style: GoogleFonts.openSans(
-                  fontSize: 16,
-                ),
-              ),
-            ],
+                width: 250,
+                height: 250,
+              );
+            },
           ),
-        ),
+          Card(
+            elevation: 8,
+            color: Colors.grey[200],
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16),
+            ),
+            child: Container(
+              width: 250,
+              padding: const EdgeInsets.all(24.0),
+              child: Column(
+                children: [
+                  CircleAvatar(
+                    radius: 50,
+                    child: Image.asset(imagePath, width: 100, height: 100),
+                  ),
+                  const SizedBox(height: 16),
+                  Text(
+                    botName,
+                    style: GoogleFonts.nunito(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    description,
+                    textAlign: TextAlign.center,
+                    style: GoogleFonts.openSans(
+                      fontSize: 16,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

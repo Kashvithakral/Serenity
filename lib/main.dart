@@ -32,6 +32,7 @@ class MyApp extends StatelessWidget {
       valueListenable: themeNotifier,
       builder: (_, ThemeMode currentMode, __) {
         return MaterialApp(
+          debugShowCheckedModeBanner: false,
           title: 'Flutter Auth Demo',
           theme: ThemeData(
             primarySwatch: Colors.blue,
