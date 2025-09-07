@@ -10,6 +10,7 @@ import 'mood_tracker_screen.dart';
 import 'ai_selection_screen.dart' hide themeNotifier;
 import 'ai_bots_screen.dart';
 import 'wellness_zone_screen.dart';
+import 'journal_screen.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'theme.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -118,6 +119,7 @@ class _MainScreenState extends State<MainScreen> {
   static List<Widget> _widgetOptions = [
     AiBotsScreen(),
     WellnessZoneScreen(),
+    JournalScreen(),
   ];
 
   void _onItemTapped(int index) {
@@ -141,6 +143,10 @@ class _MainScreenState extends State<MainScreen> {
           BottomNavigationBarItem(
             icon: Icon(Icons.favorite),
             label: 'Wellness Zone',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.edit),
+            label: 'Journal',
           ),
         ],
         currentIndex: _selectedIndex,
