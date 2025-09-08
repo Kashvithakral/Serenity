@@ -4,6 +4,8 @@ import 'package:myapp/ira_screen.dart';
 import 'package:myapp/rahi_screen.dart';
 
 class AiBotsScreen extends StatelessWidget {
+  const AiBotsScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

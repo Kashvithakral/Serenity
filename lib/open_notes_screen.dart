@@ -8,6 +8,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 
 class OpenNotesScreen extends StatefulWidget {
+  const OpenNotesScreen({super.key});
+
   @override
   _OpenNotesScreenState createState() => _OpenNotesScreenState();
 }
@@ -79,7 +81,7 @@ class _OpenNotesScreenState extends State<OpenNotesScreen> {
                           style: TextStyle(fontSize: 12, color: Colors.grey),
                         ),
                         Text(
-                          'Updated: ${note['updatedOn'] != null ? note['updatedOn'] : 'Not updated yet'}',
+                          'Updated: ${note['updatedOn'] ?? 'Not updated yet'}',
                           style: TextStyle(fontSize: 12, color: Colors.grey),
                         ),
                         Row(

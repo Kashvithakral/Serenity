@@ -7,7 +7,7 @@ class AIChatScreen extends StatefulWidget {
   final String botName;
   final String botPersonality;
 
-  const AIChatScreen({Key? key, required this.botName, required this.botPersonality}) : super(key: key);
+  const AIChatScreen({super.key, required this.botName, required this.botPersonality});
 
   @override
   State<AIChatScreen> createState() => _AIChatScreenState();

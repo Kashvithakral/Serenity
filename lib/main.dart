@@ -11,6 +11,7 @@ import 'ai_selection_screen.dart' hide themeNotifier;
 import 'ai_bots_screen.dart';
 import 'wellness_zone_screen.dart';
 import 'journal_screen.dart';
+import 'care_screen.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'theme.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -120,6 +121,7 @@ class _MainScreenState extends State<MainScreen> {
     AiBotsScreen(),
     WellnessZoneScreen(),
     JournalScreen(),
+    CareScreen(),
   ];
 
   void _onItemTapped(int index) {
@@ -148,9 +150,14 @@ class _MainScreenState extends State<MainScreen> {
             icon: Icon(Icons.edit),
             label: 'Journal',
           ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.medical_services),
+            label: 'Care',
+          ),
         ],
         currentIndex: _selectedIndex,
-        selectedItemColor: Colors.amber[800],
+        unselectedItemColor: Theme.of(context).brightness == Brightness.dark ? Colors.white : Colors.black,
+        selectedItemColor: Colors.orange,
         onTap: _onItemTapped,
       ),
     );

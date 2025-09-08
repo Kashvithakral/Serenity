@@ -73,8 +73,8 @@ class _AISelectionScreenState extends State<AISelectionScreen> with SingleTicker
             ListTile(
               title: const Text('Logout'),
               onTap: () async {
-                final AuthService _authService = AuthService();
-                await _authService.signOut();
+                final AuthService authService = AuthService();
+                await authService.signOut();
                 Navigator.pop(context);
               },
             ),

@@ -3,7 +3,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 class RahiScreen extends StatefulWidget {
-  const RahiScreen({Key? key}) : super(key: key);
+  const RahiScreen({super.key});
 
   @override
   State<RahiScreen> createState() => _RahiScreenState();

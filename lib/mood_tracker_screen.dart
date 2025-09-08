@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'ai_selection_screen.dart';
 import 'ai_chat_screen.dart';
 
 class MoodTrackerScreen extends StatefulWidget {

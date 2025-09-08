@@ -3,6 +3,8 @@ import 'package:url_launcher/url_launcher.dart' as url_launcher;
 import 'dart:math';
 
 class WellnessZoneScreen extends StatefulWidget {
+  const WellnessZoneScreen({super.key});
+
   @override
   _WellnessZoneScreenState createState() => _WellnessZoneScreenState();
 }
