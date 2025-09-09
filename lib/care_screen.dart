@@ -14,26 +14,48 @@ class CareScreen extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => BreathingExerciseScreen()),
-                );
-              },
-              child: const Text('Breathing Exercise'),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20.0),
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.blue,
+                  padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 20),
+                  textStyle: const TextStyle(fontSize: 20, fontFamily: 'Roboto'),
+                ),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => BreathingExerciseScreen()),
+                  );
+                },
+                child: const Text(
+                  'Breathing Exercise',
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),
             ),
             const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () async {
-                final Uri phoneUri = Uri.parse('tel:18008914416');
-                try {
-                  await launchUrl(phoneUri);
-                } catch (error) {
-                  print("Can't open dialer. Error: $error");
-                }
-              },
-              child: const Text('Get Help'),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20.0),
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.green,
+                  padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 20),
+                  textStyle: const TextStyle(fontSize: 20, fontFamily: 'Roboto'),
+                ),
+                onPressed: () async {
+                  final Uri phoneUri = Uri.parse('tel:18008914416');
+                  try {
+                    await launchUrl(phoneUri);
+                  } catch (error) {
+                    print("Can't open dialer. Error: $error");
+                  }
+                },
+                child: const Text(
+                  'Get Help',
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),
             ),
           ],
         ),
