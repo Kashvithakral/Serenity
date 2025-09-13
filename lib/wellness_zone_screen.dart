@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart' as url_launcher;
 import 'dart:math';
+import 'breathing_game_screen.dart';
 
 class WellnessZoneScreen extends StatefulWidget {
   const WellnessZoneScreen({super.key});
@@ -148,6 +149,15 @@ class _WellnessZoneScreenState extends State<WellnessZoneScreen>  with SingleTic
                   child: Text('Songs'),
                 ),
               ],
+            ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => BreathingGameScreen()),
+                );
+              },
+              child: Text('Breathing Game'),
             ),
           ],
         ),

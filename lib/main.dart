@@ -151,8 +151,8 @@ class _MainScreenState extends State<MainScreen> {
             label: 'Journal',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.medical_services),
-            label: 'Care',
+            icon: Icon(Icons.sports_esports),
+            label: 'Gaming',
           ),
         ],
         currentIndex: _selectedIndex,

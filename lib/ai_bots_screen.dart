@@ -47,7 +47,7 @@ class AiBotsScreen extends StatelessWidget {
               context,
               'Ira',
               'Your friendly and supportive AI companion.',
-              'assets/ira_avatar.png',
+              'assets/placeholder.png',
             ),
             SizedBox(height: 16),
             _buildBotCard(
