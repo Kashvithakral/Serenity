@@ -112,7 +112,7 @@ class _AISelectionScreenState extends State<AISelectionScreen> with SingleTicker
                 context,
                 'Ira',
                 'Your Emotional Buddy',
-                'assets/placeholder.png', // Replace with actual asset path
+                'assets/rahi_avatar.png', // Replace with actual asset path
               ),
               const SizedBox(height: 32),
               _buildBotCard(

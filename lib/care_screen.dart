@@ -26,7 +26,7 @@ class CareScreen extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const BreathingExerciseScreen(),
+                        builder: (context) => BreathingExerciseScreen(),
                       ),
                     );
                   },
@@ -41,7 +41,7 @@ class CareScreen extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const WordHuntScreen(),
+                        builder: (context) => WordHuntScreen(),
                       ),
                     );
                   },
@@ -56,7 +56,7 @@ class CareScreen extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const DoodleScreen(),
+                        builder: (context) => DoodleScreen(),
                       ),
                     );
                   },
