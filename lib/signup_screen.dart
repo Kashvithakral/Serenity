@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'theme.dart';
 import 'auth_service.dart'; // Import AuthService
@@ -54,16 +55,13 @@ class _SignupScreenState extends State<SignupScreen> {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
     return Scaffold(
       body: Container(
         decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              AppTheme.primary,
-              AppTheme.secondary,
-            ],
+          image: DecorationImage(
+            image: AssetImage('assets/Onboarding 2.png'),
+            fit: BoxFit.cover,
           ),
         ),
         child: Center(

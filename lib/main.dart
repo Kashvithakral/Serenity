@@ -15,13 +15,13 @@ import 'care_screen.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'theme.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'splash_screen.dart';
+import 'app_background.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await dotenv.load(fileName: ".env");
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(const MyApp());
 }
 
@@ -39,13 +39,14 @@ class MyApp extends StatelessWidget {
           theme: ThemeData(
             primarySwatch: Colors.blue,
             brightness: Brightness.light,
+            scaffoldBackgroundColor: Colors.transparent,
           ),
           darkTheme: ThemeData(
             brightness: Brightness.dark,
             primarySwatch: Colors.blue,
           ),
           themeMode: currentMode,
-          home: const AuthWrapper(),
+          home: const SplashScreen(home: AppBackground(child: AuthWrapper())),
         );
       },
     );
@@ -133,30 +134,27 @@ class _MainScreenState extends State<MainScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: _widgetOptions.elementAt(_selectedIndex),
-      ),
+      body: Center(child: _widgetOptions.elementAt(_selectedIndex)),
       bottomNavigationBar: BottomNavigationBar(
+        backgroundColor: Theme.of(context).brightness == Brightness.dark
+            ? null
+            : Colors.transparent,
         items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.android),
-            label: 'AI Bots',
-          ),
+          BottomNavigationBarItem(icon: Icon(Icons.android), label: 'AI Bots'),
           BottomNavigationBarItem(
             icon: Icon(Icons.favorite),
             label: 'Wellness Zone',
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.edit),
-            label: 'Journal',
-          ),
+          BottomNavigationBarItem(icon: Icon(Icons.edit), label: 'Journal'),
           BottomNavigationBarItem(
             icon: Icon(Icons.sports_esports),
             label: 'Gaming',
           ),
         ],
         currentIndex: _selectedIndex,
-        unselectedItemColor: Theme.of(context).brightness == Brightness.dark ? Colors.white : Colors.black,
+        unselectedItemColor: Theme.of(context).brightness == Brightness.dark
+            ? Colors.white
+            : Colors.black,
         selectedItemColor: Colors.orange,
         onTap: _onItemTapped,
       ),
