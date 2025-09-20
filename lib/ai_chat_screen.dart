@@ -87,66 +87,74 @@ class _AIChatScreenState extends State<AIChatScreen> {
       appBar: AppBar(
         title: Text('${widget.botName} Chat'),
       ),
-      body: Column(
-        children: [
-          Expanded(
-            child: ListView.builder(
-              padding: EdgeInsets.all(8.0),
-              itemCount: _messages.length,
-              itemBuilder: (BuildContext context, int index) {
-                final message = _messages[index];
-                final isUser = message['sender'] == 'user';
-                return Row(
-                  mainAxisAlignment: isUser ? MainAxisAlignment.end : MainAxisAlignment.start,
-                  children: [
-                    Container(
-                      margin: EdgeInsets.symmetric(vertical: 4.0),
-                      padding: EdgeInsets.all(10.0),
-                      decoration: BoxDecoration(
-                        color: isUser ? Colors.blueAccent : Colors.grey[800],
-                        borderRadius: BorderRadius.circular(8.0),
+      body: Container(
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage("assets/Onboarding 14.png"),
+            fit: BoxFit.cover,
+          ),
+        ),
+        child: Column(
+          children: [
+            Expanded(
+              child: ListView.builder(
+                padding: EdgeInsets.all(8.0),
+                itemCount: _messages.length,
+                itemBuilder: (BuildContext context, int index) {
+                  final message = _messages[index];
+                  final isUser = message['sender'] == 'user';
+                  return Row(
+                    mainAxisAlignment: isUser ? MainAxisAlignment.end : MainAxisAlignment.start,
+                    children: [
+                      Container(
+                        margin: EdgeInsets.symmetric(vertical: 4.0),
+                        padding: EdgeInsets.all(10.0),
+                        decoration: BoxDecoration(
+                          color: isUser ? Colors.blueAccent : Colors.grey[800],
+                          borderRadius: BorderRadius.circular(8.0),
+                        ),
+                        child: Expanded(
+                          child: Text(
+                            message['text']!,
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        ),
                       ),
-                      child: Expanded(
-                        child: Text(
-                          message['text']!,
-                          style: TextStyle(color: Colors.white),
+                    ],
+                  );
+                },
+              ),
+            ),
+            if (_isLoading)
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: CircularProgressIndicator(),
+              ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: TextField(
+                      controller: _messageController,
+                      decoration: InputDecoration(
+                        hintText: 'Type your message...',
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8.0),
                         ),
                       ),
                     ),
-                  ],
-                );
-              },
-            ),
-          ),
-          if (_isLoading)
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: CircularProgressIndicator(),
-            ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Row(
-              children: [
-                Expanded(
-                  child: TextField(
-                    controller: _messageController,
-                    decoration: InputDecoration(
-                      hintText: 'Type your message...',
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8.0),
-                      ),
-                    ),
                   ),
-                ),
-                SizedBox(width: 8.0),
-                FloatingActionButton(
-                  onPressed: _sendMessage,
-                  child: Icon(Icons.send),
-                ),
-              ],
+                  SizedBox(width: 8.0),
+                  FloatingActionButton(
+                    onPressed: _sendMessage,
+                    child: Icon(Icons.send),
+                  ),
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

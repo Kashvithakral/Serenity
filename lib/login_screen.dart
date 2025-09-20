@@ -38,16 +38,22 @@ class _LoginScreenState extends State<LoginScreen> {
     }
 
     // Attempt to sign in
-    dynamic result = await _authService.signIn(email, password);
+    try {
+      dynamic result = await _authService.signIn(email, password);
 
-    if (result == null) {
-      // Show error message if login fails
+      if (result == null) {
+        // Show error message if login fails
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Login failed. Please check your credentials.')),
+        );
+      } else {
+        // The AuthWrapper in main.dart will handle navigation to AISelectionScreen
+        print('Signed in: ${result.uid}');
+      }
+    } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Login failed. Please check your credentials.')),
+        SnackBar(content: Text('Login failed: ${e.toString()}')),
       );
-    } else {
-      // The AuthWrapper in main.dart will handle navigation to AISelectionScreen
-      print('Signed in: ${result.uid}');
     }
   }
 
@@ -216,7 +222,7 @@ class _LoginScreenState extends State<LoginScreen> {
         shadowColor: AppTheme.accent.withOpacity(0.5),
       ),
       child: Text(
-        'Sign Up',
+        'Login',
         style: GoogleFonts.openSans(
           fontSize: 18,
           fontWeight: FontWeight.bold,

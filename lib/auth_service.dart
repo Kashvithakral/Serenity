@@ -34,6 +34,7 @@ class AuthService {
   // Sign out
   Future<void> signOut() async {
     await _auth.signOut();
+    // Clear any persisted data here if necessary, e.g., shared preferences
   }
 
   // Get current user stream

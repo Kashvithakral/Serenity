@@ -161,95 +161,118 @@ class _PositiveWordHuntState extends State<PositiveWordHunt> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Positive Word Hunt')),
-      body: Column(
-        children: [
-          Expanded(
-            child: GridView.builder(
-              padding: const EdgeInsets.all(8.0),
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: grid[0].length,
-                mainAxisSpacing: 4.0,
-                crossAxisSpacing: 4.0,
+      body: Container(
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage('assets/Onboarding 14.png'),
+            fit: BoxFit.cover,
+            alignment: Alignment.center,
+          ),
+        ),
+        child: ClipRRect(
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(top: 20.0, left: 10.0),
+              child: Row(
+                children: [
+                  IconButton(
+                    icon: const Icon(Icons.arrow_back, color: Colors.white),
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                  ),
+                ],
               ),
-              itemCount: grid.length * grid[0].length,
-              itemBuilder: (context, index) {
-                int row = index ~/ grid[0].length;
-                int col = index % grid[0].length;
-                return GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      if (selectedIndices.any(
-                        (e) => e[0] == row && e[1] == col,
-                      )) {
-                        selectedIndices.removeWhere(
+            ),
+            Expanded(
+              child: GridView.builder(
+                padding: const EdgeInsets.all(8.0),
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: grid[0].length,
+                  mainAxisSpacing: 4.0,
+                  crossAxisSpacing: 4.0,
+                ),
+                itemCount: grid.length * grid[0].length,
+                itemBuilder: (context, index) {
+                  int row = index ~/ grid[0].length;
+                  int col = index % grid[0].length;
+                  return GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        if (selectedIndices.any(
                           (e) => e[0] == row && e[1] == col,
-                        );
-                      } else {
-                        selectedIndices.add([row, col]);
-                      }
-                      _checkWord();
-                    });
-                  },
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color:
-                          selectedIndices.any((e) => e[0] == row && e[1] == col)
-                          ? Colors.blue[200]
-                          : Colors.grey[300],
-                      borderRadius: BorderRadius.circular(8.0),
-                    ),
-                    child: Center(
-                      child: Text(
-                        grid[row][col],
-                        style: TextStyle(
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
-                          color: _showAnswers && _isWordLocation(row, col)
-                              ? Colors.red
-                              : selectedIndices.any(
-                                  (e) => e[0] == row && e[1] == col,
-                                )
-                                  ? Colors.green
-                                  : Colors.black,
+                        )) {
+                          selectedIndices.removeWhere(
+                            (e) => e[0] == row && e[1] == col,
+                          );
+                        } else {
+                          selectedIndices.add([row, col]);
+                        }
+                        _checkWord();
+                      });
+                    },
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color:
+                            selectedIndices.any((e) => e[0] == row && e[1] == col)
+                            ? Colors.blue[200]
+                            : Colors.grey[300],
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                      child: Center(
+                        child: Text(
+                          grid[row][col],
+                          style: TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
+                            color: _showAnswers && _isWordLocation(row, col)
+                                ? Colors.red
+                                : selectedIndices.any(
+                                    (e) => e[0] == row && e[1] == col,
+                                  )
+                                    ? Colors.green
+                                    : Colors.black,
+                          ),
                         ),
                       ),
-                    ),
-                  ),
-                );
-              },
-            ),
-          ),
-          Center(
-            child: Container(
-              height: 100,
-              child: ListView.builder(
-                itemCount: words.length,
-                itemBuilder: (context, index) {
-                  return Text(
-                    foundWords.contains(words[index])
-                        ? '${words[index]} (Hint: ${wordHints[index]})'
-                        : 'Hint: ${wordHints[index]}',
-                    style: TextStyle(
-                      fontSize: 20,
-                      color: foundWords.contains(words[index])
-                          ? Colors.green
-                          : Colors.black,
                     ),
                   );
                 },
               ),
             ),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              setState(() {
-                _showAnswers = !_showAnswers;
-              });
-            },
-            child: Text(_showAnswers ? 'Hide Answers' : 'Show Answers'),
-          ),
-        ],
+            Center(
+              child: Container(
+                height: 100,
+                child: ListView.builder(
+                  itemCount: words.length,
+                  itemBuilder: (context, index) {
+                    return Text(
+                      foundWords.contains(words[index])
+                          ? '${words[index]} (Hint: ${wordHints[index]})'
+                          : 'Hint: ${wordHints[index]}',
+                      style: TextStyle(
+                        fontSize: 20,
+                        color: foundWords.contains(words[index])
+                            ? Colors.green
+                            : Colors.black,
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                setState(() {
+                  _showAnswers = !_showAnswers;
+                });
+              },
+              child: Text(_showAnswers ? 'Hide Answers' : 'Show Answers'),
+            ),
+          ],
+        ),
+      ),
       ),
     );
   }

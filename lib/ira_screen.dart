@@ -91,87 +91,95 @@ class _IraScreenState extends State<IraScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Ira Chat'),
+        title: const Text('Ira Chat'),
       ),
-      body: Column(
-        children: [
-          Expanded(
-            child: ListView.builder(
-              controller: _scrollController,
-              padding: EdgeInsets.all(8.0),
-              itemCount: _messages.length + (_isLoading ? 1 : 0),
-              itemBuilder: (BuildContext context, int index) {
-                if (_isLoading && index == _messages.length) {
+      body: Container(
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage("assets/Onboarding 14.png"),
+            fit: BoxFit.cover,
+          ),
+        ),
+        child: Column(
+          children: [
+            Expanded(
+              child: ListView.builder(
+                controller: _scrollController,
+                padding: const EdgeInsets.all(8.0),
+                itemCount: _messages.length + (_isLoading ? 1 : 0),
+                itemBuilder: (BuildContext context, int index) {
+                  if (_isLoading && index == _messages.length) {
+                    return Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Flexible(
+                          child: Container(
+                            margin: const EdgeInsets.symmetric(vertical: 4.0),
+                            padding: const EdgeInsets.all(10.0),
+                            decoration: BoxDecoration(
+                              color: Theme.of(context).brightness == Brightness.dark ? Colors.cyan[50] : Colors.cyan[50],
+                              borderRadius: BorderRadius.circular(8.0),
+                            ),
+                            child: const Text(
+                              'Ira is typing...',
+                              style: TextStyle(color: Colors.black),
+                            ),
+                          ),
+                        ),
+                      ],
+                    );
+                  }
+
+                  final message = _messages[index];
+                  final isUser = message['sender'] == 'user';
                   return Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
+                    mainAxisAlignment: isUser ? MainAxisAlignment.end : MainAxisAlignment.start,
                     children: [
                       Flexible(
                         child: Container(
-                          margin: EdgeInsets.symmetric(vertical: 4.0),
-                          padding: EdgeInsets.all(10.0),
-                        decoration: BoxDecoration(
-                          color: Theme.of(context).brightness == Brightness.dark ? Colors.cyan[50] : Colors.cyan[50],
+                          margin: const EdgeInsets.symmetric(vertical: 4.0),
+                          padding: const EdgeInsets.all(10.0),
+                          decoration: BoxDecoration(
+                            color: isUser ? Colors.blueAccent : Theme.of(context).brightness == Brightness.dark ? Colors.cyan[50] : Colors.cyan[50],
+                            borderRadius: BorderRadius.circular(8.0),
+                          ),
+                          child: Text(
+                            message['text']!,
+                            style: const TextStyle(color: Colors.black),
+                          ),
+                        ),
+                      ),
+                    ],
+                  );
+                },
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: TextField(
+                      controller: _messageController,
+                      decoration: InputDecoration(
+                        hintText: 'Type your message...',
+                        border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(8.0),
                         ),
-                        child: Text(
-                          'Ira is typing...',
-                          style: TextStyle(color: Colors.black),
-                        ),
                       ),
+                      onSubmitted: (text) => _sendMessage(),
                     ),
-                  ],
-                );
-              }
-
-              final message = _messages[index];
-              final isUser = message['sender'] == 'user';
-              return Row(
-                mainAxisAlignment: isUser ? MainAxisAlignment.end : MainAxisAlignment.start,
-                children: [
-                  Flexible(
-                    child: Container(
-                      margin: EdgeInsets.symmetric(vertical: 4.0),
-                      padding: EdgeInsets.all(10.0),
-                      decoration: BoxDecoration(
-                        color: isUser ? Colors.blueAccent : Theme.of(context).brightness == Brightness.dark ? Colors.cyan[50] : Colors.cyan[50],
-                        borderRadius: BorderRadius.circular(8.0),
-                      ),
-                      child: Text(
-                        message['text']!,
-                        style: TextStyle(color: Colors.black),
-                      ),
-                    ),
+                  ),
+                  const SizedBox(width: 8.0),
+                  FloatingActionButton(
+                    onPressed: _sendMessage,
+                    child: const Icon(Icons.send),
                   ),
                 ],
-              );
-            },
-          ),
-        ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Row(
-              children: [
-                Expanded(
-                  child: TextField(
-                    controller: _messageController,
-                    decoration: InputDecoration(
-                      hintText: 'Type your message...',
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8.0),
-                      ),
-                    ),
-                    onSubmitted: (text) => _sendMessage(),
-                  ),
-                ),
-                SizedBox(width: 8.0),
-                FloatingActionButton(
-                  onPressed: _sendMessage,
-                  child: Icon(Icons.send),
-                ),
-              ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

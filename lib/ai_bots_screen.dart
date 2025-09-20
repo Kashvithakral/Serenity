@@ -9,30 +9,6 @@ class AiBotsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('AI Bots'),
-        actions: [
-          PopupMenuButton<ThemeMode>(
-            onSelected: (ThemeMode result) {
-              themeNotifier.value = result;
-            },
-            itemBuilder: (BuildContext context) => <PopupMenuEntry<ThemeMode>>[
-              const PopupMenuItem<ThemeMode>(
-                value: ThemeMode.system,
-                child: Text('System'),
-              ),
-              const PopupMenuItem<ThemeMode>(
-                value: ThemeMode.light,
-                child: Text('Light'),
-              ),
-              const PopupMenuItem<ThemeMode>(
-                value: ThemeMode.dark,
-                child: Text('Dark'),
-              ),
-            ],
-          ),
-        ],
-      ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(

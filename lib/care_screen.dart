@@ -9,9 +9,6 @@ class CareScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Gaming'),
-      ),
       body: Center(
         child: SizedBox(
           width: 300,

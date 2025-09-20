@@ -11,13 +11,11 @@ class AppBackground extends StatelessWidget {
       valueListenable: themeNotifier,
       builder: (_, ThemeMode currentMode, __) {
         return Container(
-          decoration: BoxDecoration(
-            image: currentMode == ThemeMode.light
-                ? const DecorationImage(
-                    image: AssetImage('assets/Onboarding 14.png'),
-                    fit: BoxFit.cover,
-                  )
-                : null,
+          decoration: const BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage('assets/Onboarding 14.png'),
+              fit: BoxFit.cover,
+            ),
           ),
           child: child,
         );

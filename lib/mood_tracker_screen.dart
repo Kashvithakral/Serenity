@@ -137,10 +137,12 @@ class _MoodTrackerScreenState extends State<MoodTrackerScreen> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Your Mood'),
-        content: Text('You seem to be feeling $mood. We suggest you talk to $suggestedBot: $botDescription'),
+        title: const Text('Your Mood',
+            style: TextStyle(fontWeight: FontWeight.bold)),
+        content: Text(
+            'You seem to be feeling $mood. We suggest you talk to $suggestedBot: $botDescription'),
         actions: [
-          TextButton(
+          ElevatedButton(
             onPressed: () {
               Navigator.of(context).pop();
               Navigator.pushReplacement(
@@ -148,19 +150,34 @@ class _MoodTrackerScreenState extends State<MoodTrackerScreen> {
                 MaterialPageRoute(
                   builder: (context) => AIChatScreen(
                     botName: suggestedBot,
-                    botPersonality: suggestedBot == 'Ira' ? 'emotional' : 'logical',
+                    botPersonality:
+                        suggestedBot == 'Ira' ? 'emotional' : 'logical',
                   ),
                 ),
               );
             },
             child: const Text('Chat with Suggested Bot'),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(0xFF7E57C2),
+              foregroundColor: Colors.white,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12.0),
+              ),
+            ),
           ),
-          TextButton(
+          OutlinedButton(
             onPressed: () {
               Navigator.of(context).pop();
               widget.onMoodDetermined();
             },
             child: const Text('Choose Another Bot'),
+            style: OutlinedButton.styleFrom(
+              foregroundColor: const Color(0xFF7E57C2),
+              side: const BorderSide(color: Color(0xFF7E57C2)),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12.0),
+              ),
+            ),
           ),
         ],
       ),
@@ -170,13 +187,16 @@ class _MoodTrackerScreenState extends State<MoodTrackerScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.transparent,
       appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
         actions: [
           TextButton(
             onPressed: () {
               widget.onMoodDetermined();
             },
-            child: const Text('Skip'),
+            child: const Text('Skip', style: TextStyle(color: Color(0xFF7E57C2))),
           ),
         ],
       ),
@@ -192,16 +212,31 @@ class _MoodTrackerScreenState extends State<MoodTrackerScreen> {
                 children: [
                   Text(
                     _questions[index]['question'] as String,
-                    style: const TextStyle(fontSize: 24),
+                    style: const TextStyle(
+                        fontSize: 28, fontWeight: FontWeight.bold),
                     textAlign: TextAlign.center,
                   ),
-                  const SizedBox(height: 20),
-                  ...(_questions[index]['answers'] as List<String>).map((answer) {
+                  const SizedBox(height: 40),
+                  ...(_questions[index]['answers'] as List<String>)
+                      .map((answer) {
                     return Padding(
                       padding: const EdgeInsets.symmetric(vertical: 8.0),
-                      child: ElevatedButton(
-                        onPressed: () => _handleAnswer(answer),
-                        child: Text(answer),
+                      child: SizedBox(
+                        width: double.infinity,
+                        child: TextButton.icon(
+                          icon: Icon(_getIconForAnswer(answer)),
+                          onPressed: () => _handleAnswer(answer),
+                          label: Text(answer),
+                          style: TextButton.styleFrom(
+                            foregroundColor: Colors.white,
+                            backgroundColor: const Color(0xFF7E57C2),
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 16.0, horizontal: 24.0),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12.0),
+                            ),
+                          ),
+                        ),
                       ),
                     );
                   }),
@@ -212,5 +247,53 @@ class _MoodTrackerScreenState extends State<MoodTrackerScreen> {
         },
       ),
     );
+  }
+
+  IconData _getIconForAnswer(String answer) {
+    switch (answer) {
+      case 'Happy':
+        return Icons.sentiment_very_satisfied;
+      case 'Sad':
+        return Icons.sentiment_very_dissatisfied;
+      case 'Angry':
+        return Icons.sentiment_very_dissatisfied;
+      case 'Low':
+      case 'Poorly':
+        return Icons.sentiment_dissatisfied;
+      case 'High':
+        return Icons.battery_full;
+      case 'Medium':
+        return Icons.battery_std;
+      case 'Well':
+        return Icons.nightlight_round;
+      case 'Okay':
+        return Icons.nightlight_round_outlined;
+      case 'Not at all':
+        return Icons.thumb_up;
+      case 'A little':
+        return Icons.thermostat;
+      case 'A lot':
+        return Icons.local_fire_department;
+      case 'Good':
+        return Icons.fastfood;
+      case 'Normal':
+        return Icons.fastfood_outlined;
+      case 'Poor':
+        return Icons.no_food;
+      case 'Very':
+        return Icons.directions_run;
+      case 'Somewhat':
+        return Icons.directions_walk;
+      case 'Great':
+        return Icons.fitness_center;
+      case 'Not so good':
+        return Icons.sick;
+      case 'No':
+        return Icons.check_circle;
+      case 'Yes':
+        return Icons.cancel;
+      default:
+        return Icons.help;
+    }
   }
 }

@@ -14,6 +14,7 @@ class _BreathingExerciseScreenState extends State<BreathingExerciseScreen> with 
   bool _exerciseStarted = false;
   String _inhaleExhaleText = '';
   bool _quoteVisible = false;
+  bool _showWellDone = false;
   late AnimationController _controller;
   late Animation<double> _animation;
 
@@ -64,6 +65,10 @@ class _BreathingExerciseScreenState extends State<BreathingExerciseScreen> with 
       });
 
       Timer.periodic(const Duration(seconds: 1), (timer) {
+        if (!mounted) {
+          timer.cancel();
+          return;
+        }
         setState(() {
           if (_timerSeconds > 0) {
             _timerSeconds--;
@@ -71,6 +76,14 @@ class _BreathingExerciseScreenState extends State<BreathingExerciseScreen> with 
             timer.cancel();
             _controller.stop();
             _inhaleExhaleText = '';
+            setState(() {
+              _showWellDone = true;
+            });
+            Future.delayed(const Duration(seconds: 2), () {
+              if (mounted) {
+                Navigator.of(context).pop();
+              }
+            });
           }
         });
       });
@@ -80,44 +93,75 @@ class _BreathingExerciseScreenState extends State<BreathingExerciseScreen> with 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Breathing Exercise'),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            if (_quoteVisible)
-              const Text(
-                'Breathe in calm, breathe out stress—your peace begins with every breath.',
-                style: TextStyle(fontSize: 18),
-                textAlign: TextAlign.center,
+      body: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(20),
+          image: const DecorationImage(
+            image: AssetImage('assets/Onboarding 14.png'),
+            fit: BoxFit.fill,
+          ),
+        ),
+        child: SafeArea(
+          child: Stack(
+            children: [
+              Center(
+                child: _showWellDone
+                    ? const Text(
+                        'Well Done!',
+                        style: TextStyle(
+                          fontSize: 32,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black,
+                        ),
+                      )
+                    : Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          if (_quoteVisible)
+                            const Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 20.0),
+                              child: Text(
+                                'Breathe in calm, breathe out stress—your peace begins with every breath.',
+                                style: TextStyle(fontSize: 18, color: Colors.black),
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                          if (!_quoteVisible)
+                            Text(
+                              'Time: $_timerSeconds',
+                              style: const TextStyle(fontSize: 20, color: Colors.black),
+                            ),
+                          if (!_quoteVisible) const SizedBox(height: 20),
+                          if (_startTextVisible && !_quoteVisible)
+                            ElevatedButton(
+                              onPressed: _startBreathing,
+                              child: const Text('Start Breathing'),
+                            ),
+                          if (_exerciseStarted && !_quoteVisible) const SizedBox(height: 20),
+                          if (_exerciseStarted && !_quoteVisible)
+                            Text(
+                              _inhaleExhaleText,
+                              style: const TextStyle(fontSize: 24, color: Colors.black),
+                            ),
+                          if (_exerciseStarted && !_quoteVisible) const SizedBox(height: 20),
+                          Image.asset(
+                            'assets/Gemini_Generated_Image_bib6pqbib6pqbib6__1_-removebg-preview.png',
+                            width: 200 * (_animation.value * 1.5),
+                            height: 200 * (_animation.value * 1.5),
+                          ),
+                        ],
+                      ),
               ),
-            if (!_quoteVisible)
-              Text(
-                'Time: $_timerSeconds',
-                style: const TextStyle(fontSize: 20),
+              Positioned(
+                top: 20,
+                left: 20,
+                child: IconButton(
+                  icon: const Icon(Icons.arrow_back, color: Colors.black),
+                  onPressed: () => Navigator.of(context).pop(),
+                ),
               ),
-            if (!_quoteVisible) const SizedBox(height: 20),
-            if (_startTextVisible && !_quoteVisible)
-              ElevatedButton(
-                onPressed: _startBreathing,
-                child: const Text('Start Breathing'),
-              ),
-            if (_exerciseStarted && !_quoteVisible) const SizedBox(height: 20),
-            if (_exerciseStarted && !_quoteVisible)
-              Text(
-                _inhaleExhaleText,
-                style: const TextStyle(fontSize: 24),
-              ),
-            if (_exerciseStarted && !_quoteVisible) const SizedBox(height: 20),
-            if (_exerciseStarted && !_quoteVisible)
-              Image.asset(
-                'assets/Gemini_Generated_Image_bib6pqbib6pqbib6__1_-removebg-preview.png',
-                width: 200 * (_animation.value * 1.5),
-                height: 200 * (_animation.value * 1.5),
-              ),
-          ],
+            ],
+          ),
         ),
       ),
     );

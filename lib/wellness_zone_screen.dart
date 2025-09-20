@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart' as url_launcher;
 import 'dart:math';
+import 'breathing_exercise_screen.dart';
 import 'breathing_game_screen.dart';
 
 class WellnessZoneScreen extends StatefulWidget {
@@ -37,9 +38,6 @@ class _WellnessZoneScreenState extends State<WellnessZoneScreen>  with SingleTic
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Wellness Zone'),
-      ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -149,15 +147,6 @@ class _WellnessZoneScreenState extends State<WellnessZoneScreen>  with SingleTic
                   child: Text('Songs'),
                 ),
               ],
-            ),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => BreathingGameScreen()),
-                );
-              },
-              child: Text('Breathing Game'),
             ),
           ],
         ),

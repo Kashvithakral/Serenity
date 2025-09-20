@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'theme.dart';
 import 'auth_service.dart'; // Import AuthService
+import 'login_screen.dart';
 
 class SignupScreen extends StatefulWidget { // Changed to StatefulWidget
   const SignupScreen({super.key});
@@ -150,7 +151,7 @@ class _SignupScreenState extends State<SignupScreen> {
         elevation: 8,
         shadowColor: AppTheme.accent.withOpacity(0.5),
       ),
-      child: Text(
+child: Text(
         'Create Account',
         style: GoogleFonts.openSans(
           fontSize: 18,
@@ -164,7 +165,10 @@ class _SignupScreenState extends State<SignupScreen> {
   Widget _buildLoginLink(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.pop(context);
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const LoginScreen()),
+        );
       },
       child: Text.rich(
         TextSpan(
@@ -174,7 +178,7 @@ class _SignupScreenState extends State<SignupScreen> {
           ),
           children: [
             TextSpan(
-              text: 'Sign In',
+              text: 'Login',
               style: GoogleFonts.openSans(
                 color: AppTheme.accent,
                 fontWeight: FontWeight.bold,
