@@ -133,6 +133,8 @@ If you are in crisis, please reach out to your local emergency number or a trust
 
 - Team Name: SkyZen 
 - Team Leader: Kashvi Thakral
+- Designing Head :Lavina Solanki
+- Tech Lead : Abhijeet Singh 
 - Hackathon: GenAI Exchange Hackathon  
 
 ---
