@@ -2,13 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:myapp/theme.dart';
 import 'package:myapp/ira_screen.dart';
 import 'package:myapp/rahi_screen.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class AiBotsScreen extends StatelessWidget {
-  const AiBotsScreen({super.key});
+  const AiBotsScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: Colors.green,
+        onPressed: () {
+          _showHelplineDialog(context);
+        },
+        child: const Icon(Icons.phone),
+      ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -18,14 +26,14 @@ class AiBotsScreen extends StatelessWidget {
               'Meet Your AI Companions',
               style: Theme.of(context).textTheme.displayLarge,
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             _buildBotCard(
               context,
               'Ira',
               'Your friendly and supportive AI companion.',
               'assets/9439729.jpg',
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             _buildBotCard(
               context,
               'Rahi',
@@ -67,7 +75,7 @@ class AiBotsScreen extends StatelessWidget {
                 backgroundImage: AssetImage(avatarPath),
                 radius: 25,
               ),
-              SizedBox(width: 12),
+              const SizedBox(width: 12),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -76,7 +84,7 @@ class AiBotsScreen extends StatelessWidget {
                       name,
                       style: Theme.of(context).textTheme.headlineMedium,
                     ),
-                    SizedBox(height: 4),
+                    const SizedBox(height: 4),
                     Text(
                       description,
                       style: Theme.of(context).textTheme.bodyMedium,
@@ -86,6 +94,31 @@ class AiBotsScreen extends StatelessWidget {
               ),
             ],
           ),
+        ),
+      ),
+    );
+  }
+
+  void _showHelplineDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Center(child: Text('We are with you')),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ElevatedButton(
+              onPressed: () async {
+                final Uri phoneUri = Uri.parse('tel:18008914416');
+                try {
+                  await launchUrl(phoneUri);
+                } catch (e) {
+                  print('Could not launch $phoneUri');
+                }
+              },
+              child: const Text('Get Help'),
+            ),
+          ],
         ),
       ),
     );

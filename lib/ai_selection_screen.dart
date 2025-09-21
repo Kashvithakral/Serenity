@@ -5,6 +5,7 @@ import 'ai_chat_screen.dart';
 import 'theme.dart';
 import 'auth_service.dart';
 import 'wellness_zone_screen.dart'; // Import the WellnessZoneScreen
+import 'package:url_launcher/url_launcher.dart';
 
 final ValueNotifier<ThemeMode> themeNotifier =
     ValueNotifier(ThemeMode.system);
@@ -140,6 +141,34 @@ class _AISelectionScreenState extends State<AISelectionScreen> with SingleTicker
               ),
             ],
           ),
+        ),
+      ),
+    );
+  }
+
+  void _showHelplineDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('We are with you'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ElevatedButton(
+              onPressed: () async {
+                final Uri phoneUri = Uri(
+                  scheme: 'tel',
+                  path: '18008914416',
+                );
+                if (await canLaunchUrl(phoneUri)) {
+                  launchUrl(phoneUri);
+                } else {
+                  throw 'Could not launch $phoneUri';
+                }
+              },
+              child: const Text('Get Help'),
+            ),
+          ],
         ),
       ),
     );

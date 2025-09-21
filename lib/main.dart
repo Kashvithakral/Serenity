@@ -289,13 +289,6 @@ class _MainScreenState extends State<MainScreen> {
                     );
                   },
                 ),
-                    PopupMenuItem<String>(
-                      value: 'Helpline',
-                      child: Text('Helpline'),
-                      onTap: () {
-                        _showHelplineDialog(context);
-                      },
-                    ),
                 PopupMenuItem<String>(
                   value: 'Logout',
                   child: Text('Logout'),
